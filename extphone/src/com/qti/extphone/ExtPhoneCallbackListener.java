@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
@@ -82,6 +82,7 @@ public class ExtPhoneCallbackListener {
     public static final int EVENT_ON_DDS_SWITCH_CONFIG_CRITERIA_CHANGED = 44;
     public static final int EVENT_ON_DDS_SWITCH_CONFIG_RECOMMENDATION = 45;
     public static final int EVENT_ON_SEND_USER_PREFERENCE_CONFIG_FOR_DATA_DURING_CALL = 46;
+    public static final int EVENT_SET_CELLULAR_ROAMING_PREFERENCE_RESPONSE = 47;
 
     private static final int UNUSED_ARGUMENT = 0;
     private static final int UNUSED_SLOT_ID = -1;
@@ -585,6 +586,17 @@ public class ExtPhoneCallbackListener {
                                     "EVENT_ON_SIM_PERSO_UNLOCK_STATUS_CHANGE : Exception = " + e);
                         }
                         break;
+                    case EVENT_SET_CELLULAR_ROAMING_PREFERENCE_RESPONSE:
+                        try {
+                            IExtPhoneCallbackStub.Result result =
+                                    (IExtPhoneCallbackStub.Result) msg.obj;
+                            ExtPhoneCallbackListener.this.setCellularRoamingPreferenceResponse(
+                                    result.mSlotId, result.mToken, result.mStatus);
+                        } catch (RemoteException e) {
+                            Log.e(TAG, "EVENT_SET_CELLULAR_ROAMING_PREFERENCE_RESPONSE : " +
+                                    "Exception = " + e);
+                        }
+                        break;
                     default :
                         Log.d(TAG, "default : " + msg.what);
                 }
@@ -850,6 +862,12 @@ public class ExtPhoneCallbackListener {
             throws RemoteException {
         Log.d(TAG, "UNIMPLEMENTED: onSimPersoUnlockStatusChange: slotId = "
                 + slotId + " persoUnlockStatus = " + persoUnlockStatus);
+    }
+
+    public void setCellularRoamingPreferenceResponse(int slotId, Token token, Status status)
+            throws RemoteException {
+        Log.d(TAG, "UNIMPLEMENTED: setCellularRoamingPreferenceResponse: slotId = " + slotId +
+                " token = " + token + " status = " + status);
     }
 
     private static class IExtPhoneCallbackStub extends IExtPhoneCallback.Stub {
@@ -1157,11 +1175,19 @@ public class ExtPhoneCallbackListener {
                     new Result(UNUSED_SLOT_ID , null, null, SUCCESS, recommendedSlotId));
         }
 
+        @Override
         public void onSendUserPreferenceConfigForDataDuringVoiceCall(Token token,
                 Status status) throws RemoteException {
             send(EVENT_ON_SEND_USER_PREFERENCE_CONFIG_FOR_DATA_DURING_CALL,
                     UNUSED_ARGUMENT, UNUSED_ARGUMENT,
                     new Result(UNUSED_SLOT_ID, token, status, SUCCESS, null));
+        }
+
+        @Override
+        public void setCellularRoamingPreferenceResponse(int slotId, Token token, Status status)
+                throws RemoteException {
+            send(EVENT_SET_CELLULAR_ROAMING_PREFERENCE_RESPONSE, 0, 0,
+                    new Result(slotId, token, status, -1, null));
         }
 
         class Result {

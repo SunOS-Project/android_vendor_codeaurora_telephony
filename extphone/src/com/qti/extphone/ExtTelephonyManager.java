@@ -30,7 +30,7 @@
 /*
  * Changes from Qualcomm Innovation Center are provided under the following license:
  *
- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
@@ -1190,6 +1190,35 @@ public class ExtTelephonyManager {
             Log.e(LOG_TAG, "Remote exception for getSimPersoUnlockStatus", e);
         }
         return persoUnlockStatus;
+    }
+
+    public CellularRoamingPreference getCellularRoamingPreference(int slotId) {
+        CellularRoamingPreference pref = null;
+        if (!isServiceConnected()) {
+            Log.e(LOG_TAG, "getCellularRoamingPreference: service not connected!");
+            return pref;
+        }
+        try {
+            pref = mExtTelephonyService.getCellularRoamingPreference(slotId);
+        } catch (RemoteException ex) {
+            Log.e(LOG_TAG, "getCellularRoamingPreference failed.", ex);
+        }
+        return pref;
+    }
+
+    public Token setCellularRoamingPreference(Client client, int slotId,
+            CellularRoamingPreference pref) {
+        Token token = null;
+        if (!isServiceConnected()) {
+            Log.e(LOG_TAG, "setCellularRoamingPreference: service not connected!");
+            return token;
+        }
+        try {
+            token = mExtTelephonyService.setCellularRoamingPreference(client, slotId, pref);
+        } catch (RemoteException ex) {
+            Log.e(LOG_TAG, "setCellularRoamingPreference failed.", ex);
+        }
+        return token;
     }
 
     public Client registerCallback(String packageName, IExtPhoneCallback callback) {

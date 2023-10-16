@@ -30,7 +30,7 @@
 /*
  * Changes from Qualcomm Innovation Center are provided under the following license:
  *
- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
@@ -38,6 +38,7 @@ package com.qti.extphone;
 
 import android.telephony.ImsiEncryptionInfo;
 
+import com.qti.extphone.CellularRoamingPreference;
 import com.qti.extphone.CiwlanConfig;
 import com.qti.extphone.Client;
 import com.qti.extphone.IDepersoResCallback;
@@ -664,4 +665,23 @@ interface IExtPhone {
      * Response function is IExtPhoneCallback.onDdsSwitchConfigCapabilityChanged().
      */
     Token getDdsSwitchConfigCapability(in Client client);
+
+    /**
+     * Get the cellular roaming preference for the specified slot
+     *
+     * @param slotId - slot ID about which the request is sent
+     * @return - International and domestic cellular roaming preference
+     */
+     CellularRoamingPreference getCellularRoamingPreference(int slotId);
+
+    /**
+     * Set the cellular roaming preference for the specified slot
+     *
+     * @param client - Client registered with package name to receive callbacks.
+     * @param slotId - slot ID for which the request is sent
+     * @param pref - The international and domestic cellular roaming preference
+     * @return - Integer token to compare with the response
+     */
+     Token setCellularRoamingPreference(in Client client, int slotId,
+            in CellularRoamingPreference pref);
 }

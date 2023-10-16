@@ -30,7 +30,7 @@
 /*
  * Changes from Qualcomm Innovation Center are provided under the following license:
  *
- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
@@ -445,4 +445,14 @@ interface IExtPhoneCallback {
      * @param status SUCCESS/FAILURE based on RIL data module response
      */
     void onSendUserPreferenceConfigForDataDuringVoiceCall(in Token token, in Status status);
+
+    /**
+     * Response to setCellularRoamingPreference
+     *
+     * @param slotId - slot ID to which this response belongs
+     * @param token - To match request/response. Response must include the same token as in the
+     *        request. Otherwise, the token is set to -1.
+     * @param status - SUCCESS/FAILURE based on the modem result code
+     */
+    void setCellularRoamingPreferenceResponse(int slotId, in Token token, in Status status);
 }
