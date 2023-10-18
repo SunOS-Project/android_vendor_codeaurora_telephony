@@ -534,6 +534,9 @@ public class QtiCallConstants {
     public static final String EXTRAS_CALL_PROGRESS_REASON_CODE = "CallProgReasonCode";
     public static final String EXTRAS_CALL_PROGRESS_REASON_TEXT = "CallProgReasonText";
 
+    // True if the called party is alerted and ringing
+    public static final String EXTRA_IS_CALLED_PARTY_RINGING = "isCalledPartyRinging";
+
     // Call audio quality constants.
     public static final int CALL_AUDIO_QUALITY_NO_HD = 0;
     public static final int CALL_AUDIO_QUALITY_HD = 1;
