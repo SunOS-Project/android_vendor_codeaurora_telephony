@@ -37,6 +37,7 @@
 package com.qti.extphone;
 
 import android.telephony.CellInfo;
+import com.qti.extphone.CiwlanConfig;
 import com.qti.extphone.BearerAllocationStatus;
 import com.qti.extphone.DcParam;
 import com.qti.extphone.DualDataRecommendation;
@@ -455,4 +456,29 @@ interface IExtPhoneCallback {
      * @param status - SUCCESS/FAILURE based on the modem result code
      */
     void setCellularRoamingPreferenceResponse(int slotId, in Token token, in Status status);
+
+    /**
+     * Indication to know if C_IWLAN RAT is available
+     *
+     * @param slotId - Slot Id
+     * @param ciwlanAvailable - ciwlanAvailable true indicates C_IWLAN RAT is available,
+     *                          false otherwise.
+     */
+    void onCiwlanAvailable(int slotId, in boolean ciwlanAvailable);
+
+    /**
+     * Indication to know the C_IWLAN mode(only vs preferred) for home and roaming
+     *
+     * @param slotId - Slot Id
+     * @param ciwlanConfig - C_IWLAN configuration (only vs preferred) for home and roaming
+     */
+    void onCiwlanConfigChange(int slotId, in CiwlanConfig ciwlanConfig);
+
+    /**
+    * Response to setCiwlanModeUserPreference
+    * @param slotId - Slot Id
+    * @param token - token is the same token which is recived in setCiwlanModeUserPreference
+    * @param status - SUCCESS/FAILURE based on the modem Result code
+    */
+    void setCiwlanModeUserPreferenceResponse(int slotId, in Token token, in Status status);
 }

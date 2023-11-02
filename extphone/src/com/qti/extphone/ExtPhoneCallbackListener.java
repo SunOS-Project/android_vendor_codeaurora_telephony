@@ -14,6 +14,7 @@ import android.telephony.CellInfo;
 import android.util.Log;
 
 import com.qti.extphone.BearerAllocationStatus;
+import com.qti.extphone.CiwlanConfig;
 import com.qti.extphone.DcParam;
 import com.qti.extphone.DualDataRecommendation;
 import com.qti.extphone.IExtPhoneCallback;
@@ -83,6 +84,9 @@ public class ExtPhoneCallbackListener {
     public static final int EVENT_ON_DDS_SWITCH_CONFIG_RECOMMENDATION = 45;
     public static final int EVENT_ON_SEND_USER_PREFERENCE_CONFIG_FOR_DATA_DURING_CALL = 46;
     public static final int EVENT_SET_CELLULAR_ROAMING_PREFERENCE_RESPONSE = 47;
+    public static final int EVENT_ON_CIWLAN_AVAILABLE = 48;
+    public static final int EVENT_SET_CIWLAN_MODE_USER_PREFERENCE_RESPONSE = 49;
+    public static final int EVENT_ON_CIWLAN_CONFIG_CHANGE = 50;
 
     private static final int UNUSED_ARGUMENT = 0;
     private static final int UNUSED_SLOT_ID = -1;
@@ -597,6 +601,39 @@ public class ExtPhoneCallbackListener {
                                     "Exception = " + e);
                         }
                         break;
+                    case EVENT_ON_CIWLAN_AVAILABLE:
+                        try {
+                            IExtPhoneCallbackStub.Result result =
+                                    (IExtPhoneCallbackStub.Result) msg.obj;
+                            ExtPhoneCallbackListener.this.onCiwlanAvailable(
+                                    result.mSlotId, (boolean)result.mData);
+                        } catch (RemoteException e) {
+                            Log.e(TAG,
+                                    "EVENT_ON_CIWLAN_AVAILABLE : Exception = " + e);
+                        }
+                        break;
+                    case EVENT_ON_CIWLAN_CONFIG_CHANGE:
+                        try {
+                            IExtPhoneCallbackStub.Result result =
+                                    (IExtPhoneCallbackStub.Result) msg.obj;
+                            ExtPhoneCallbackListener.this.onCiwlanConfigChange(
+                                    result.mSlotId, (CiwlanConfig)result.mData);
+                        } catch (RemoteException e) {
+                            Log.e(TAG,
+                                    "EVENT_ON_CIWLAN_CONFIG_CHANGE : Exception = " + e);
+                        }
+                        break;
+                    case EVENT_SET_CIWLAN_MODE_USER_PREFERENCE_RESPONSE:
+                        try {
+                            IExtPhoneCallbackStub.Result result =
+                                    (IExtPhoneCallbackStub.Result) msg.obj;
+                            ExtPhoneCallbackListener.this.setCiwlanModeUserPreferenceResponse(
+                                result.mSlotId, result.mToken, result.mStatus);
+                        } catch (RemoteException e) {
+                            Log.e(TAG, "EVENT_SET_CIWLAN_MODE_USER_PREFERENCE_RESPONSE" +
+                                    " : Exception = " + e);
+                        }
+                        break;
                     default :
                         Log.d(TAG, "default : " + msg.what);
                 }
@@ -868,6 +905,24 @@ public class ExtPhoneCallbackListener {
             throws RemoteException {
         Log.d(TAG, "UNIMPLEMENTED: setCellularRoamingPreferenceResponse: slotId = " + slotId +
                 " token = " + token + " status = " + status);
+   }
+
+    public void onCiwlanAvailable(int slotId, boolean ciwlanAvailable)
+            throws RemoteException {
+        Log.d(TAG, "UNIMPLEMENTED: onCiwlanAvailable: slotId = "
+                + slotId + " ciwlanAvailable = " + ciwlanAvailable);
+    }
+
+    public void onCiwlanConfigChange(int slotId, CiwlanConfig ciwlanConfig)
+            throws RemoteException {
+        Log.d(TAG, "UNIMPLEMENTED: onCiwlanConfigChange: slotId = "
+                + slotId + " CiwlanConfig = " + ciwlanConfig);
+    }
+
+    public void setCiwlanModeUserPreferenceResponse(int slotId, Token token, Status status)
+            throws RemoteException {
+        Log.d(TAG, "UNIMPLEMENTED: setCiwlanModeUserPreferenceResponse: slotId = "
+                + slotId + " token = " + token + " status = " + status);
     }
 
     private static class IExtPhoneCallbackStub extends IExtPhoneCallback.Stub {
@@ -1181,6 +1236,27 @@ public class ExtPhoneCallbackListener {
             send(EVENT_ON_SEND_USER_PREFERENCE_CONFIG_FOR_DATA_DURING_CALL,
                     UNUSED_ARGUMENT, UNUSED_ARGUMENT,
                     new Result(UNUSED_SLOT_ID, token, status, SUCCESS, null));
+        }
+
+        @Override
+        public void onCiwlanAvailable(int slotId, boolean ciwlanAvailable)
+                throws RemoteException {
+            send(EVENT_ON_CIWLAN_AVAILABLE, 0, 0,
+                    new Result(slotId , null, null, -1, ciwlanAvailable));
+        }
+
+        @Override
+        public void onCiwlanConfigChange(int slotId, CiwlanConfig ciwlanConfig)
+                throws RemoteException {
+            send(EVENT_ON_CIWLAN_CONFIG_CHANGE, 0, 0,
+                    new Result(slotId , null, null, -1, ciwlanConfig));
+        }
+
+        @Override
+        public void setCiwlanModeUserPreferenceResponse(int slotId, Token token, Status status)
+                throws RemoteException {
+            send(EVENT_SET_CIWLAN_MODE_USER_PREFERENCE_RESPONSE, 0, 0,
+                    new Result(slotId , token, status, -1, null));
         }
 
         @Override

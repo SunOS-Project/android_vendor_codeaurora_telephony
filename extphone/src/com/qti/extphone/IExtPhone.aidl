@@ -684,4 +684,38 @@ interface IExtPhone {
      */
      Token setCellularRoamingPreference(in Client client, int slotId,
             in CellularRoamingPreference pref);
+    /**
+     * Request for C_IWLAN availability.
+     *
+     * This API returns true or false based on various conditions like internet PDN is established
+     * on DDS over LTE/NR RATs, CIWLAN is supported in home/roaming etc..
+     * This is different from existing API IExtPhone#isEpdgOverCellularDataSupported() which
+     * returns true if modem supports the CIWLAN feature based on static configuration in modem.
+     *
+     * @param - slotId slot ID
+     * @return - boolean TRUE/FALSE based on C_IWLAN availability.
+     */
+    boolean isCiwlanAvailable(int slotId);
+
+    /**
+     * Set C_IWLAN mode user preference.
+     *
+     * @param slotId - slot ID
+     * @param client - Client registered with package name to receive callbacks.
+     * @param CiwlanConfig - The C_IWLAN mode user preference (only vs preferred)
+     *                       for home and roaming.
+     * @return - Integer Token can be used to compare with the response.
+     */
+    Token setCiwlanModeUserPreference(int slotId, in Client client, in CiwlanConfig ciwlanConfig);
+
+    /**
+     * Get C_IWLAN mode user preference
+     *
+     * This function returns C_IWLAN mode user preference set by the user whereas
+     * IQtiRadio#getCiwlanConfig() returns actual C_IWLAN mode set by the modem.
+     *
+     * @param slotId - slot ID
+     * @return - The C_IWLAN mode user preference (only vs preferred) for home and roaming.
+     */
+    CiwlanConfig getCiwlanModeUserPreference(int slotId);
 }
