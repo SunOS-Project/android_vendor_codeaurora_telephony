@@ -30,7 +30,7 @@
 /*
  * Changes from Qualcomm Innovation Center are provided under the following license:
  *
- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
@@ -68,6 +68,12 @@ public class ExtTelephonyManager {
     private static final String LOG_TAG = "ExtTelephonyManager";
     private static final boolean DBG = true;
     private static final int INVALID = -1;
+
+    public static final int FEATURE_BACK_TO_BACK_SUPPLEMENTARY_SERVICE_REQ = 1;
+    public static final int FEATURE_PERSO_UNLOCK_TEMP                      = 2;
+    public static final int FEATURE_GET_CIWLAN_CONFIG                      = 3;
+    public static final int FEATURE_CELLULAR_ROAMING                       = 4;
+    public static final int FEATURE_CIWLAN_MODE_PREFERENCE                 = 5;
 
     private static ExtTelephonyManager mInstance;
 
