@@ -290,4 +290,23 @@ public class ExtPhoneCallbackBase extends IExtPhoneCallback.Stub {
     public void onSimPersoUnlockStatusChange(int slotId, QtiPersoUnlockStatus persoUnlockStatus)
             throws RemoteException {
     }
+
+    @Override
+    public void onDdsSwitchConfigCapabilityChanged(Token token, Status status,
+            boolean isCapable) throws RemoteException {
+    }
+
+    @Override
+    public void onDdsSwitchConfigCriteriaChanged(boolean telephonyDdsSwitch)
+            throws RemoteException {
+    }
+
+    @Override
+    public void onDdsSwitchConfigRecommendation(int recommendedSlotId) throws RemoteException {
+    }
+
+    @Override
+    public void onSendUserPreferenceConfigForDataDuringVoiceCall(Token token,
+            Status status) throws RemoteException {
+    }
 }
