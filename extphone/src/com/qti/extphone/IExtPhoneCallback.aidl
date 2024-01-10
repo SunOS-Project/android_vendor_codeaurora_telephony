@@ -404,4 +404,45 @@ interface IExtPhoneCallback {
      * @param - persoUnlockStatus which can be generally temporary or permanent.
      */
     void onSimPersoUnlockStatusChange(int slotId, in QtiPersoUnlockStatus persoUnlockStatus);
+
+    /**
+     * Indicates that modem capability of Smart Temp DDS Switch has changed.
+     *
+     * Upon receiving this indication, HLOS must inform the modem the user’s preference
+     * for enabling temp DDS switch.
+     *
+     * @param token to match request/response.
+     * @param status SUCCESS/FAILURE based on the modem result code
+     * @param isCapable true/false based on whether the device is capable of performing
+     *        Smart Temp DDS switch
+     */
+    void onDdsSwitchConfigCapabilityChanged(in Token token, in Status status, boolean isCapable);
+
+    /**
+     * Indicates that Temp DDS Switch criteria has changed.
+     *
+     * The boolean contained in this indication determines whether the modem-initiated
+     * Smart Temp DDS Switch is to be used, or the telephony-initiated legacy Temp DDS
+     * Switch logic is to be used. If telephony temp DDS switch logic is disabled, then
+     * telephony must wait for modem recommendations to perform the Temp DDS switch.
+     *
+     * @param telephonyDdsSwitch true/false based on whether telephony temp DDS switch
+     *        logic should be enabled or disabled
+     */
+    void onDdsSwitchConfigCriteriaChanged(boolean telephonyDdsSwitch);
+
+    /**
+     * Indicates the modem's recommendation for the slot on which Temp DDS Switch has to be made.
+     *
+     * @param recommendedSlotId slot ID to which DDS must be switched
+     */
+    void onDdsSwitchConfigRecommendation(int recommendedSlotId);
+
+    /**
+     * Response to IExtPhone.sendUserPreferenceConfigForDataDuringVoiceCall()
+     *
+     * @param token to match request/response.
+     * @param status SUCCESS/FAILURE based on RIL data module response
+     */
+    void onSendUserPreferenceConfigForDataDuringVoiceCall(in Token token, in Status status);
 }

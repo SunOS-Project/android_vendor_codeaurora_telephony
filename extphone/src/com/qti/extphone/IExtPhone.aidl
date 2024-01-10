@@ -511,6 +511,8 @@ interface IExtPhone {
 
     /**
      * Request for smart DDS switch capability supported by modem.
+     * Prefer the slot-agnostic variant {@link getDdsSwitchConfigCapability} if the vendor
+     * supports it.
      * @param - slotId slot ID
      * @return - Integer Token can be used to compare with the response.
      */
@@ -520,6 +522,8 @@ interface IExtPhone {
      * Inform modem if user enabled/disabled UI preference for data during voice call.
      * if its enabled then modem can send recommendations to switch DDS during
      * voice call on nonDDS.
+     * Prefer the slot-agnostic variant {@link sendUserPreferenceConfigForDataDuringVoiceCall}
+     * if the vendor supports it.
      * @param - slotId slot ID
      * @param - userPreference true/false based on UI preference
      * @param - client registered with packagename to receive
@@ -625,4 +629,39 @@ interface IExtPhone {
      * @return - persoUnlockStatus which can be generally temporary or permanent.
      */
     QtiPersoUnlockStatus getSimPersoUnlockStatus(int slotId);
+
+    /**
+     * Inform modem whether we allow Temp DDS Switch to the individual slots. This takes
+     * into account factors like the switch state of ‘Data During Calls’ setting, the
+     * current roaming state of the individual subscriptions and their data roaming
+     * enabled state.
+     * If data during calls is allowed, modem can send recommendations to switch
+     * DDS during a voice call on the non-DDS.
+     *
+     * This is a slot-agnostic variant of {@link sendUserPreferenceForDataDuringVoiceCall},
+     * and should be preferred.
+     *
+     * @param isAllowedOnSlot vector containing a boolean per slot that determines whether
+     *        we allow temporary DDS switch to that slot.
+     * @param client Client registered to receive the response callback.
+     * @return Token to be used to compare with the response callback.
+     *
+     * Response function is
+     * IExtPhoneCallback.onSendUserPreferenceConfigForDataDuringVoiceCall().
+     */
+    Token sendUserPreferenceConfigForDataDuringVoiceCall(in boolean[] isAllowedOnSlot,
+            in Client client);
+
+    /**
+     * Request for Smart Temp DDS Switch capability from the modem. This determines the overall
+     * capability of the Smart Temp DDS switch feature.
+     *
+     * This is a slot-agnostic variant of {@link getDdsSwitchCapability}, and should be preferred.
+     *
+     * @param client Client registered to receive the response callback.
+     * @return Token to be used to compare with the response callback.
+     *
+     * Response function is IExtPhoneCallback.onDdsSwitchConfigCapabilityChanged().
+     */
+    Token getDdsSwitchConfigCapability(in Client client);
 }
