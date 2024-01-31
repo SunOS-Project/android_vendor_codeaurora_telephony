@@ -69,6 +69,12 @@ public class ExtTelephonyManager {
     private static final boolean DBG = true;
     private static final int INVALID = -1;
 
+    public static final int FEATURE_BACK_TO_BACK_SUPPLEMENTARY_SERVICE_REQ = 1;
+    public static final int FEATURE_PERSO_UNLOCK_TEMP                      = 2;
+    public static final int FEATURE_GET_CIWLAN_CONFIG                      = 3;
+    public static final int FEATURE_CELLULAR_ROAMING                       = 4;
+    public static final int FEATURE_CIWLAN_MODE_PREFERENCE                 = 5;
+
     private static ExtTelephonyManager mInstance;
 
     private Context mContext;
