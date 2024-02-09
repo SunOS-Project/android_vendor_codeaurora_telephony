@@ -112,6 +112,11 @@ public class ExtTelephonyManager {
     public static final int ACCESS_MODE_SNPN = 2;
 
     /**
+     * Feature list
+     */
+    public static final int FEATURE_SMART_TEMP_DDS_VIA_RADIO_CONFIG = 101;
+
+    /**
     * Constructor
     * @param context context in which the bindService will be
     *                initiated.
@@ -903,6 +908,36 @@ public class ExtTelephonyManager {
                     userPreference, client);
         } catch (RemoteException e) {
             Log.e(LOG_TAG, "sendUserPreferenceForDataDuringVoiceCall, remote exception", e);
+        }
+        return token;
+    }
+
+    public Token getDdsSwitchConfigCapability(Client client) {
+        Token token = null;
+        if (!isServiceConnected()) {
+            Log.e(LOG_TAG, "service not connected!");
+            return token;
+        }
+        try {
+            token = mExtTelephonyService.getDdsSwitchConfigCapability(client);
+        } catch (RemoteException e) {
+            Log.e(LOG_TAG, "getDdsSwitchConfigCapability, remote exception", e);
+        }
+        return token;
+    }
+
+    public Token sendUserPreferenceConfigForDataDuringVoiceCall(boolean[] isAllowedOnSlot,
+            Client client) {
+        Token token = null;
+        if (!isServiceConnected()) {
+            Log.e(LOG_TAG, "service not connected!");
+            return token;
+        }
+        try {
+            token = mExtTelephonyService.sendUserPreferenceConfigForDataDuringVoiceCall(
+                    isAllowedOnSlot, client);
+        } catch (RemoteException e) {
+            Log.e(LOG_TAG, "sendUserPreferenceConfigForDataDuringVoiceCall, remote exception", e);
         }
         return token;
     }

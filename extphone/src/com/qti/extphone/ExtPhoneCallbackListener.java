@@ -78,6 +78,14 @@ public class ExtPhoneCallbackListener {
     public static final int EVENT_SET_DUAL_DATA_USER_PREFERENCE_RESPONSE = 40;
     public static final int EVENT_ON_DUAL_DATA_RECOMMENDATION = 41;
     public static final int EVENT_ON_SIM_PERSO_UNLOCK_STATUS_CHANGE = 42;
+    public static final int EVENT_ON_DDS_SWITCH_CONFIG_CAPABILITY_CHANGED = 43;
+    public static final int EVENT_ON_DDS_SWITCH_CONFIG_CRITERIA_CHANGED = 44;
+    public static final int EVENT_ON_DDS_SWITCH_CONFIG_RECOMMENDATION = 45;
+    public static final int EVENT_ON_SEND_USER_PREFERENCE_CONFIG_FOR_DATA_DURING_CALL = 46;
+
+    private static final int UNUSED_ARGUMENT = 0;
+    private static final int UNUSED_SLOT_ID = -1;
+    private static final int SUCCESS = 0;
 
     private Handler mHandler;
     IExtPhoneCallback mCallback = new IExtPhoneCallbackStub(this);
@@ -219,6 +227,18 @@ public class ExtPhoneCallbackListener {
                             Log.e(TAG, "EVENT_ON_DDS_SWITCH_CAPABILITY_CHANGE : Exception = " + e);
                         }
                         break;
+                    case EVENT_ON_DDS_SWITCH_CONFIG_CAPABILITY_CHANGED:
+                        try {
+                            IExtPhoneCallbackStub.Result result =
+                                    (IExtPhoneCallbackStub.Result) msg.obj;
+                            ExtPhoneCallbackListener.this.onDdsSwitchConfigCapabilityChanged(
+                                    result.mToken, result.mStatus,
+                                    (boolean) result.mData);
+                        } catch (RemoteException e) {
+                            Log.e(TAG, "EVENT_ON_DDS_SWITCH_CONFIG_CAPABILITY_CHANGED :"
+                                    + " Exception = " + e);
+                        }
+                        break;
                     case EVENT_ON_DDS_SWITCH_CRITERIA_CHANGE:
                         try {
                             IExtPhoneCallbackStub.Result result =
@@ -229,6 +249,17 @@ public class ExtPhoneCallbackListener {
                             Log.e(TAG, "EVENT_ON_DDS_SWITCH_CRITERIA_CHANGE : Exception = " + e);
                         }
                         break;
+                    case EVENT_ON_DDS_SWITCH_CONFIG_CRITERIA_CHANGED:
+                        try {
+                            IExtPhoneCallbackStub.Result result =
+                                    (IExtPhoneCallbackStub.Result) msg.obj;
+                            ExtPhoneCallbackListener.this.onDdsSwitchConfigCriteriaChanged(
+                                    (boolean) result.mData);
+                        } catch (RemoteException e) {
+                            Log.e(TAG, "EVENT_ON_DDS_SWITCH_CONFIG_CRITERIA_CHANGED :"
+                                    + " Exception = " + e);
+                        }
+                        break;
                     case EVENT_ON_DDS_SWITCH_RECOMMENDATION:
                         try {
                             IExtPhoneCallbackStub.Result result =
@@ -237,6 +268,17 @@ public class ExtPhoneCallbackListener {
                                     (int) result.mData);
                         } catch (RemoteException e) {
                             Log.e(TAG, "EVENT_ON_DDS_SWITCH_RECOMMENDATION : Exception = " + e);
+                        }
+                        break;
+                    case EVENT_ON_DDS_SWITCH_CONFIG_RECOMMENDATION:
+                        try {
+                            IExtPhoneCallbackStub.Result result =
+                                    (IExtPhoneCallbackStub.Result) msg.obj;
+                            ExtPhoneCallbackListener.this.onDdsSwitchConfigRecommendation(
+                                    (int) result.mData);
+                        } catch (RemoteException e) {
+                            Log.e(TAG, "EVENT_ON_DDS_SWITCH_CONFIG_RECOMMENDATION :"
+                                    + " Exception = " + e);
                         }
                         break;
                     case EVENT_ON_ENABLE_ENDC:
@@ -340,6 +382,18 @@ public class ExtPhoneCallbackListener {
                         } catch (RemoteException e) {
                             Log.e(TAG, "EVENT_ON_SEND_USER_PREFERENCE_FOR_DATA_DURING_VOICE_CALL : "
                                     + "Exception = " + e);
+                        }
+                        break;
+                    case EVENT_ON_SEND_USER_PREFERENCE_CONFIG_FOR_DATA_DURING_CALL:
+                        try {
+                            IExtPhoneCallbackStub.Result result =
+                                    (IExtPhoneCallbackStub.Result) msg.obj;
+                            ExtPhoneCallbackListener.this.
+                                    onSendUserPreferenceConfigForDataDuringVoiceCall(
+                                    result.mToken, result.mStatus);
+                        } catch (RemoteException e) {
+                            Log.e(TAG, "EVENT_ON_SEND_USER_PREFERENCE_CONFIG_FOR_DATA_DURING_CALL"
+                                    + " : Exception = " + e);
                         }
                         break;
                     case EVENT_ON_SET_NR_CONFIG:
@@ -656,10 +710,22 @@ public class ExtPhoneCallbackListener {
                 " token = " + token + " status = " + status);
     }
 
+    public void onSendUserPreferenceConfigForDataDuringVoiceCall(Token token, Status status)
+            throws RemoteException {
+        Log.d(TAG, "UNIMPLEMENTED: onSendUserPreferenceConfigForDataDuringVoiceCall:" +
+                " token = " + token + " status = " + status);
+    }
+
     public void onDdsSwitchCapabilityChange(int slotId, Token token, Status status, boolean support)
             throws RemoteException {
         Log.d(TAG, "UNIMPLEMENTED: onDdsSwitchCapabilityChange: slotId = " + slotId + " token = " +
                 token + " status = " + status + " support = " + support);
+    }
+
+    public void onDdsSwitchConfigCapabilityChanged(Token token, Status status, boolean isCapable)
+            throws RemoteException {
+        Log.d(TAG, "UNIMPLEMENTED: onDdsSwitchConfigCapabilityChanged: token = " +
+                token + " status = " + status + " isCapable = " + isCapable);
     }
 
     public void onDdsSwitchCriteriaChange(int slotId, boolean telephonyDdsSwitch)
@@ -668,9 +734,21 @@ public class ExtPhoneCallbackListener {
                 " telephonyDdsSwitch = " + telephonyDdsSwitch);
     }
 
+    public void onDdsSwitchConfigCriteriaChanged(boolean telephonyDdsSwitch)
+            throws RemoteException {
+        Log.d(TAG, "UNIMPLEMENTED: onDdsSwitchConfigCriteriaChanged:" +
+                " telephonyDdsSwitch = " + telephonyDdsSwitch);
+    }
+
     public void onDdsSwitchRecommendation(int slotId, int recommendedSlotId)
             throws RemoteException {
         Log.d(TAG, "UNIMPLEMENTED: onDdsSwitchRecommendation: slotId = " + slotId +
+                " recommendedSlotId = " + recommendedSlotId);
+    }
+
+    public void onDdsSwitchConfigRecommendation(int recommendedSlotId)
+            throws RemoteException {
+        Log.d(TAG, "UNIMPLEMENTED: onDdsSwitchConfigRecommendation: " +
                 " recommendedSlotId = " + recommendedSlotId);
     }
 
@@ -1056,6 +1134,34 @@ public class ExtPhoneCallbackListener {
                 throws RemoteException {
             send(EVENT_ON_SIM_PERSO_UNLOCK_STATUS_CHANGE, 0, 0,
                     new Result(slotId, null, null, -1, persoUnlockStatus));
+        }
+
+        @Override
+        public void onDdsSwitchConfigCapabilityChanged(Token token, Status status,
+                boolean isCapable) throws RemoteException {
+            send(EVENT_ON_DDS_SWITCH_CONFIG_CAPABILITY_CHANGED, UNUSED_ARGUMENT, UNUSED_ARGUMENT,
+                    new Result(UNUSED_SLOT_ID, token, status, SUCCESS, isCapable));
+        }
+
+        @Override
+        public void onDdsSwitchConfigCriteriaChanged(boolean telephonyDdsSwitch)
+                throws RemoteException {
+            send(EVENT_ON_DDS_SWITCH_CONFIG_CRITERIA_CHANGED, UNUSED_ARGUMENT, UNUSED_ARGUMENT,
+                    new Result(UNUSED_SLOT_ID, null, null, SUCCESS, telephonyDdsSwitch));
+        }
+
+        @Override
+        public void onDdsSwitchConfigRecommendation(int recommendedSlotId)
+                throws RemoteException {
+            send(EVENT_ON_DDS_SWITCH_CONFIG_RECOMMENDATION, UNUSED_ARGUMENT, UNUSED_ARGUMENT,
+                    new Result(UNUSED_SLOT_ID , null, null, SUCCESS, recommendedSlotId));
+        }
+
+        public void onSendUserPreferenceConfigForDataDuringVoiceCall(Token token,
+                Status status) throws RemoteException {
+            send(EVENT_ON_SEND_USER_PREFERENCE_CONFIG_FOR_DATA_DURING_CALL,
+                    UNUSED_ARGUMENT, UNUSED_ARGUMENT,
+                    new Result(UNUSED_SLOT_ID, token, status, SUCCESS, null));
         }
 
         class Result {
