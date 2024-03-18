@@ -30,7 +30,7 @@
 /*
  * Changes from Qualcomm Innovation Center are provided under the following license:
  *
- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
@@ -40,6 +40,7 @@ import android.os.RemoteException;
 import android.telephony.CellInfo;
 import android.util.Log;
 import com.qti.extphone.BearerAllocationStatus;
+import com.qti.extphone.CiwlanConfig;
 import com.qti.extphone.DcParam;
 import com.qti.extphone.DualDataRecommendation;
 import com.qti.extphone.IExtPhoneCallback;
@@ -308,5 +309,25 @@ public class ExtPhoneCallbackBase extends IExtPhoneCallback.Stub {
     @Override
     public void onSendUserPreferenceConfigForDataDuringVoiceCall(Token token,
             Status status) throws RemoteException {
+    }
+
+    @Override
+    public void setCellularRoamingPreferenceResponse(int slotId, Token token, Status status)
+            throws RemoteException {
+    }
+
+    @Override
+    public void onCiwlanAvailable(int slotId, boolean ciwlanAvailable)
+            throws RemoteException {
+    }
+
+    @Override
+    public void onCiwlanConfigChange(int slotId, CiwlanConfig ciwlanConfig)
+            throws RemoteException {
+    }
+
+    @Override
+    public void setCiwlanModeUserPreferenceResponse(int slotId, Token token, Status status)
+            throws RemoteException {
     }
 }

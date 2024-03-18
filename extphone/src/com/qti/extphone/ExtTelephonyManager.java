@@ -30,7 +30,7 @@
 /*
  * Changes from Qualcomm Innovation Center are provided under the following license:
  *
- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
@@ -68,6 +68,12 @@ public class ExtTelephonyManager {
     private static final String LOG_TAG = "ExtTelephonyManager";
     private static final boolean DBG = true;
     private static final int INVALID = -1;
+
+    public static final int FEATURE_BACK_TO_BACK_SUPPLEMENTARY_SERVICE_REQ = 1;
+    public static final int FEATURE_PERSO_UNLOCK_TEMP                      = 2;
+    public static final int FEATURE_GET_CIWLAN_CONFIG                      = 3;
+    public static final int FEATURE_CELLULAR_ROAMING                       = 4;
+    public static final int FEATURE_CIWLAN_MODE_PREFERENCE                 = 5;
 
     private static ExtTelephonyManager mInstance;
 
@@ -1178,6 +1184,73 @@ public class ExtTelephonyManager {
         return token;
     }
 
+    /**
+     * Request for C_IWLAN availability.
+     * This API returns true or false based on various conditions like internet PDN is established
+     * on DDS over LTE/NR RATs, CIWLAN is supported in home/roaming etc..
+     * This is different from existing API IExtPhone#isEpdgOverCellularDataSupported() which
+     * returns true if modem supports the CIWLAN feature based on static configuration in modem.
+     *
+     * @param - slotId slot ID
+     * @return - boolean TRUE/FALSE based on C_IWLAN availability.
+     */
+    public boolean isCiwlanAvailable(int slotId) {
+        if (isServiceConnected()) {
+            try {
+                return mExtTelephonyService.isCiwlanAvailable(slotId);
+            } catch (RemoteException ex) {
+                Log.e(LOG_TAG, "isCiwlanAvailable Failed.", ex);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Set C_IWLAN mode user preference.
+     *
+     * @param slotId - slot ID
+     * @param client - Client registered with package name to receive callbacks.
+     * @param CiwlanConfig - The C_IWLAN mode user preference (only vs preferred)
+                             for home and roaming.
+     * @return - Integer Token can be used to compare with the response.
+     */
+    public Token setCiwlanModeUserPreference(int slotId, Client client, CiwlanConfig ciwlanConfig) {
+        Token token = null;
+        if (!isServiceConnected()) {
+            Log.e(LOG_TAG, "service not connected!");
+            return token;
+        }
+        try {
+            token = mExtTelephonyService.setCiwlanModeUserPreference(slotId, client, ciwlanConfig);
+        } catch (RemoteException e) {
+            Log.e(LOG_TAG, "setCiwlanModeUserPreference ended in remote exception", e);
+        }
+        return token;
+    }
+
+    /**
+     * Get C_IWLAN mode user preference
+     *
+     * This function returns C_IWLAN mode user preference set by the user whereas
+     * IExtPhone#getCiwlanConfig() returns actual C_IWLAN mode set by the modem.
+     *
+     * @param slotId - slot ID
+     * @return - The C_IWLAN mode user preference (only vs preferred) for home and roaming.
+     */
+    public CiwlanConfig getCiwlanModeUserPreference(int slotId) {
+        CiwlanConfig config = null;
+        if (!isServiceConnected()) {
+            Log.e(LOG_TAG, "service not connected!");
+            return config;
+        }
+        try {
+            config = mExtTelephonyService.getCiwlanModeUserPreference(slotId);
+        } catch (RemoteException e) {
+            Log.e(LOG_TAG, "getCiwlanModeUserPreference ended in remote exception", e);
+        }
+        return config;
+    }
+
     public QtiPersoUnlockStatus getSimPersoUnlockStatus(int slotId) {
         QtiPersoUnlockStatus persoUnlockStatus = null;
         if (!isServiceConnected()) {
@@ -1190,6 +1263,35 @@ public class ExtTelephonyManager {
             Log.e(LOG_TAG, "Remote exception for getSimPersoUnlockStatus", e);
         }
         return persoUnlockStatus;
+    }
+
+    public CellularRoamingPreference getCellularRoamingPreference(int slotId) {
+        CellularRoamingPreference pref = null;
+        if (!isServiceConnected()) {
+            Log.e(LOG_TAG, "getCellularRoamingPreference: service not connected!");
+            return pref;
+        }
+        try {
+            pref = mExtTelephonyService.getCellularRoamingPreference(slotId);
+        } catch (RemoteException ex) {
+            Log.e(LOG_TAG, "getCellularRoamingPreference failed.", ex);
+        }
+        return pref;
+    }
+
+    public Token setCellularRoamingPreference(Client client, int slotId,
+            CellularRoamingPreference pref) {
+        Token token = null;
+        if (!isServiceConnected()) {
+            Log.e(LOG_TAG, "setCellularRoamingPreference: service not connected!");
+            return token;
+        }
+        try {
+            token = mExtTelephonyService.setCellularRoamingPreference(client, slotId, pref);
+        } catch (RemoteException ex) {
+            Log.e(LOG_TAG, "setCellularRoamingPreference failed.", ex);
+        }
+        return token;
     }
 
     public Client registerCallback(String packageName, IExtPhoneCallback callback) {

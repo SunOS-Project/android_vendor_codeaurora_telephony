@@ -30,7 +30,7 @@
 /*
  * Changes from Qualcomm Innovation Center are provided under the following license:
  *
- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  * SPDX-License-Identifier: BSD-3-Clause-Clear
  */
 
@@ -38,6 +38,7 @@ package com.qti.extphone;
 
 import android.telephony.ImsiEncryptionInfo;
 
+import com.qti.extphone.CellularRoamingPreference;
 import com.qti.extphone.CiwlanConfig;
 import com.qti.extphone.Client;
 import com.qti.extphone.IDepersoResCallback;
@@ -664,4 +665,57 @@ interface IExtPhone {
      * Response function is IExtPhoneCallback.onDdsSwitchConfigCapabilityChanged().
      */
     Token getDdsSwitchConfigCapability(in Client client);
+
+    /**
+     * Get the cellular roaming preference for the specified slot
+     *
+     * @param slotId - slot ID about which the request is sent
+     * @return - International and domestic cellular roaming preference
+     */
+     CellularRoamingPreference getCellularRoamingPreference(int slotId);
+
+    /**
+     * Set the cellular roaming preference for the specified slot
+     *
+     * @param client - Client registered with package name to receive callbacks.
+     * @param slotId - slot ID for which the request is sent
+     * @param pref - The international and domestic cellular roaming preference
+     * @return - Integer token to compare with the response
+     */
+     Token setCellularRoamingPreference(in Client client, int slotId,
+            in CellularRoamingPreference pref);
+    /**
+     * Request for C_IWLAN availability.
+     *
+     * This API returns true or false based on various conditions like internet PDN is established
+     * on DDS over LTE/NR RATs, CIWLAN is supported in home/roaming etc..
+     * This is different from existing API IExtPhone#isEpdgOverCellularDataSupported() which
+     * returns true if modem supports the CIWLAN feature based on static configuration in modem.
+     *
+     * @param - slotId slot ID
+     * @return - boolean TRUE/FALSE based on C_IWLAN availability.
+     */
+    boolean isCiwlanAvailable(int slotId);
+
+    /**
+     * Set C_IWLAN mode user preference.
+     *
+     * @param slotId - slot ID
+     * @param client - Client registered with package name to receive callbacks.
+     * @param CiwlanConfig - The C_IWLAN mode user preference (only vs preferred)
+     *                       for home and roaming.
+     * @return - Integer Token can be used to compare with the response.
+     */
+    Token setCiwlanModeUserPreference(int slotId, in Client client, in CiwlanConfig ciwlanConfig);
+
+    /**
+     * Get C_IWLAN mode user preference
+     *
+     * This function returns C_IWLAN mode user preference set by the user whereas
+     * IQtiRadio#getCiwlanConfig() returns actual C_IWLAN mode set by the modem.
+     *
+     * @param slotId - slot ID
+     * @return - The C_IWLAN mode user preference (only vs preferred) for home and roaming.
+     */
+    CiwlanConfig getCiwlanModeUserPreference(int slotId);
 }
