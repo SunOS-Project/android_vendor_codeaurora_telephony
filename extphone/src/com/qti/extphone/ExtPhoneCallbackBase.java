@@ -47,6 +47,7 @@ import com.qti.extphone.IExtPhoneCallback;
 import com.qti.extphone.NetworkSelectionMode;
 import com.qti.extphone.NrConfig;
 import com.qti.extphone.NrConfigType;
+import com.qti.extphone.NrIcon;
 import com.qti.extphone.NrIconType;
 import com.qti.extphone.QRadioResponseInfo;
 import com.qti.extphone.SignalStrength;
@@ -328,6 +329,15 @@ public class ExtPhoneCallbackBase extends IExtPhoneCallback.Stub {
 
     @Override
     public void setCiwlanModeUserPreferenceResponse(int slotId, Token token, Status status)
+            throws RemoteException {
+    }
+
+    @Override
+    public void onNrIconChange(int slotId, NrIcon icon) throws RemoteException {
+    }
+
+    @Override
+    public void onNrIconResponse(int slotId, Token token, Status status, NrIcon icon)
             throws RemoteException {
     }
 }
