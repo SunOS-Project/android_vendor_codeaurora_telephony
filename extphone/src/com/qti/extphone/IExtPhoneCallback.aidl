@@ -44,6 +44,7 @@ import com.qti.extphone.DualDataRecommendation;
 import com.qti.extphone.NetworkSelectionMode;
 import com.qti.extphone.NrConfig;
 import com.qti.extphone.NrConfigType;
+import com.qti.extphone.NrIcon;
 import com.qti.extphone.NrIconType;
 import com.qti.extphone.QRadioResponseInfo;
 import com.qti.extphone.QosParametersResult;
@@ -481,4 +482,24 @@ interface IExtPhoneCallback {
     * @param status - SUCCESS/FAILURE based on the modem Result code
     */
     void setCiwlanModeUserPreferenceResponse(int slotId, in Token token, in Status status);
+
+    /**
+     * Unsol msg to indicate changes to the NR icon
+     *
+     * @param slotId - Slot ID for which this indication is sent
+     * @param icon - NR icon type as per NrIconType.aidl and additional information such as the Rx
+     *               count
+     */
+    void onNrIconChange(int slotId, in NrIcon icon);
+
+    /**
+     * Response to queryNrIcon
+     *
+     * @param slotId - Slot ID for which this response is sent
+     * @param token - This is the same token which is sent from queryNrIcon
+     * @param status - SUCCESS/FAILURE based on the modem result code
+     * @param icon - NR icon type as per NrIconType.aidl and additional information such as the Rx
+     *               count
+     */
+    void onNrIconResponse(int slotId, in Token token, in Status status, in NrIcon icon);
 }

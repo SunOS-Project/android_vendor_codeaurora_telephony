@@ -21,6 +21,7 @@ import com.qti.extphone.IExtPhoneCallback;
 import com.qti.extphone.NetworkSelectionMode;
 import com.qti.extphone.NrConfig;
 import com.qti.extphone.NrConfigType;
+import com.qti.extphone.NrIcon;
 import com.qti.extphone.NrIconType;
 import com.qti.extphone.QRadioResponseInfo;
 import com.qti.extphone.QtiPersoUnlockStatus;
@@ -87,6 +88,8 @@ public class ExtPhoneCallbackListener {
     public static final int EVENT_ON_CIWLAN_AVAILABLE = 48;
     public static final int EVENT_SET_CIWLAN_MODE_USER_PREFERENCE_RESPONSE = 49;
     public static final int EVENT_ON_CIWLAN_CONFIG_CHANGE = 50;
+    public static final int EVENT_ON_NR_ICON_CHANGE = 51;
+    public static final int EVENT_QUERY_NR_ICON_RESPONSE = 52;
 
     private static final int UNUSED_ARGUMENT = 0;
     private static final int UNUSED_SLOT_ID = -1;
@@ -634,6 +637,26 @@ public class ExtPhoneCallbackListener {
                                     " : Exception = " + e);
                         }
                         break;
+                    case EVENT_ON_NR_ICON_CHANGE:
+                        try {
+                            IExtPhoneCallbackStub.Result result =
+                                    (IExtPhoneCallbackStub.Result) msg.obj;
+                            ExtPhoneCallbackListener.this.onNrIconChange(result.mSlotId,
+                                    (NrIcon) result.mData);
+                        } catch (RemoteException e) {
+                            Log.e(TAG, "EVENT_ON_NR_ICON_CHANGE : Exception = " + e);
+                        }
+                        break;
+                    case EVENT_QUERY_NR_ICON_RESPONSE:
+                        try {
+                            IExtPhoneCallbackStub.Result result =
+                                    (IExtPhoneCallbackStub.Result) msg.obj;
+                            ExtPhoneCallbackListener.this.onNrIconResponse(result.mSlotId,
+                                    result.mToken, result.mStatus, (NrIcon) result.mData);
+                        } catch (RemoteException e) {
+                            Log.e(TAG, "EVENT_QUERY_NR_ICON_RESPONSE : Exception = " + e);
+                        }
+                        break;
                     default :
                         Log.d(TAG, "default : " + msg.what);
                 }
@@ -923,6 +946,16 @@ public class ExtPhoneCallbackListener {
             throws RemoteException {
         Log.d(TAG, "UNIMPLEMENTED: setCiwlanModeUserPreferenceResponse: slotId = "
                 + slotId + " token = " + token + " status = " + status);
+    }
+
+    public void onNrIconChange(int slotId, NrIcon icon) throws RemoteException {
+        Log.d(TAG, "UNIMPLEMENTED: onNrIconChange: slotId = " + slotId + ", icon = " + icon);
+    }
+
+    public void onNrIconResponse(int slotId, Token token, Status status, NrIcon icon)
+            throws RemoteException {
+        Log.d(TAG, "UNIMPLEMENTED: onNrIconResponse: slotId = " + slotId + ", token = " + token
+                + ", status = " + status + ", icon = " + icon);
     }
 
     private static class IExtPhoneCallbackStub extends IExtPhoneCallback.Stub {
@@ -1264,6 +1297,17 @@ public class ExtPhoneCallbackListener {
                 throws RemoteException {
             send(EVENT_SET_CELLULAR_ROAMING_PREFERENCE_RESPONSE, 0, 0,
                     new Result(slotId, token, status, -1, null));
+        }
+
+        @Override
+        public void onNrIconChange(int slotId, NrIcon icon) throws RemoteException {
+            send(EVENT_ON_NR_ICON_CHANGE, 0, 0, new Result(slotId, null, null, -1, icon));
+        }
+
+        @Override
+        public void onNrIconResponse(int slotId, Token token, Status status, NrIcon icon)
+                throws RemoteException {
+            send(EVENT_QUERY_NR_ICON_RESPONSE, 0, 0, new Result(slotId, token, status, -1, icon));
         }
 
         class Result {

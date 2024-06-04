@@ -220,6 +220,7 @@ interface IExtPhone {
     /**
     * Async api
     * Requires permission: android.Manifest.permission.READ_PRIVILEGED_PHONE_STATE
+    * @deprecated Use {@link #queryNrIcon} instead.
     */
     Token queryNrIconType(int slotId, in Client client);
 
@@ -718,4 +719,13 @@ interface IExtPhone {
      * @return - The C_IWLAN mode user preference (only vs preferred) for home and roaming.
      */
     CiwlanConfig getCiwlanModeUserPreference(int slotId);
+
+    /**
+     * Get the NR icon information to be shown on the UI
+     *
+     * @param slotId - Slot ID for which this request is sent
+     * @param client - Client registered with package name to receive callbacks
+     * @return - Integer token to compare with the response
+     */
+    Token queryNrIcon(int slotId, in Client client);
 }

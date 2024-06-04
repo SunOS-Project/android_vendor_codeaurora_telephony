@@ -1294,6 +1294,20 @@ public class ExtTelephonyManager {
         return token;
     }
 
+    public Token queryNrIcon(int slotId, Client client) {
+        Token token = null;
+        if (!isServiceConnected()) {
+            Log.e(LOG_TAG, "queryNrIcon: service not connected!");
+            return token;
+        }
+        try {
+            token = mExtTelephonyService.queryNrIcon(slotId, client);
+        } catch (RemoteException ex) {
+            Log.e(LOG_TAG, "queryNrIcon failed.", ex);
+        }
+        return token;
+    }
+
     public Client registerCallback(String packageName, IExtPhoneCallback callback) {
         Client client = null;
         if (!isServiceConnected()) {
