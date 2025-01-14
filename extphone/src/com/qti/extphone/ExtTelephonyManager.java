@@ -74,6 +74,7 @@ public class ExtTelephonyManager {
     public static final int FEATURE_GET_CIWLAN_CONFIG                      = 3;
     public static final int FEATURE_CELLULAR_ROAMING                       = 4;
     public static final int FEATURE_CIWLAN_MODE_PREFERENCE                 = 5;
+    public static final int FEATURE_NITZ_ENHANCEMENT                       = 6;
 
     private static ExtTelephonyManager mInstance;
 
